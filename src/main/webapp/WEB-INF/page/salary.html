@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title>员工管理系统</title>
+    <!--引入jQuery文件-->
+    <script src="jquery/jquery-3.4.1.min.js"></script>
+    <!--引入BootStrap.min.css-->
+    <link rel="stylesheet" href="bootstrap/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <!--引入Bootstrap.min.js文件-->
+    <script src="bootstrap/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+
+    <!--引入Vue.js-->
+    <script type="text/javascript" src="vue/vue.js"></script>
+    <style>
+        table {
+            table-layout: fixed;
+        }
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <div class="container">
+        <h1>员工信息管理</h1>
+        <!--面板组件-->
+        <div class="panel panel-primary">
+            <!--面板标题区域-->
+            <div class="panel-heading">
+                <h3 class="panel-title">添加用户</h3>
+            </div>
+            <!--面板内容区域-->
+            <div class="panel-body form-inline">
+                <!--员工ID-->
+                <div class="form-group">
+                    <label for="addID">员工ID</label>
+                    <input v-model="addId" type="text" class="form-control" id="addID" placeholder="员工ID"/>
+                </div>
+                <!--员工名输入框-->
+                <div class="form-group">
+                    <label for="addName">员工姓名</label>
+                    <input v-model="addName" type="text" class="form-control" id="addName" placeholder="员工姓名"/>
+                </div>
+                <div class="form-group">
+                    <label for="addSalary">薪资</label>
+                    <input v-model="addSalary" type="number" class="form-control" id="addSalary" placeholder="4000"/>
+                </div>
+                <button type="submit" class="btn btn-primary" @click="addEmpFun">添加</button>
+                <!--搜索框-->
+                <div class="form-group pull-right">
+                    <input v-model="searchValue" type="text" class="form-control" id="searchInput" placeholder="搜索"/>
+                </div>
+            </div>
+        </div>
+        <!--定义表格-->
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>员工编号</th>
+                <th>员工姓名</th>
+                <th>薪资</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--扫描-->
+            <tr v-for="(item,index) of searchEmpFun(searchValue)" :key="index">
+                <td>{{item.id}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.salary}}</td>
+                <td>{{item.createtime}}</td>
+                <td>
+                    <button @click="updateEmpFun(index)" class="btn btn-warning btn-xs" data-toggle="modal"
+                            data-target="#myModal">修改
+                    </button>
+                    <button @click="deleteEmpFun(index)" class="btn btn-danger btn-xs">删除</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--弹出框-->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" id="myModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">修改员工信息</h4>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <!--员工ID-->
+                    <div class="form-group">
+                        <label for="updateId" class="col-sm-2 control-label">员工ID</label>
+                        <div class="col-sm-10">
+                            <input v-model="updateEmpObj.id" type="text" class="form-control" id="updateId" readonly>
+                        </div>
+                    </div>
+                    <!--员工姓名-->
+                    <div class="form-group">
+                        <label for="updateName" class="col-sm-2 control-label">员工姓名</label>
+                        <div class="col-sm-10">
+                            <input v-model="updateEmpObj.name" type="text" class="form-control" id="updateName">
+                        </div>
+                    </div>
+                    <!--员工薪资-->
+                    <div class="form-group">
+                        <label for="updateSalary" class="col-sm-2 control-label">员工薪资</label>
+                        <div class="col-sm-10">
+                            <input v-model="updateEmpObj.salary" type="number" class="form-control" id="updateSalary">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">保存修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //创建vue实例对象
+    new Vue({
+//挂载点
+        el: "#app",
+//model数据
+        data: {
+//三个属性进行双向绑定
+            addId: "",
+            addName: "",
+            addSalary: "",
+//更新对象
+            updateEmpObj: {
+                id: "",
+                name: "",
+                salary: ""
+            },
+//定义搜索绑定值
+            searchValue: "",
+//原始数据
+            empDataArray: [{
+                id: "1001",
+                name: "小黑",
+                salary: "3000",
+                createtime: new Date().toLocaleDateString()
+            },
+                {
+                    id: "1002",
+                    name: "王二",
+                    salary: "5000",
+                    createtime: new Date().toLocaleDateString()
+                },
+                {
+                    id: "1003",
+                    name: "张三",
+                    salary: "5000",
+                    createtime: new Date().toLocaleDateString()
+                },
+                {
+                    id: "1004",
+                    name: "李四",
+                    salary: "7000",
+                    createtime: new Date().toLocaleDateString()
+                },
+                {
+                    id: "1005",
+                    name: "阿波罗",
+                    salary: "9000",
+                    createtime: new Date().toLocaleDateString()
+                }
+            ]
+        },
+//函数集合
+        methods: {
+//点击添加按钮
+            addEmpFun() {
+                var addId = this.addId;
+                var addName = this.addName;
+                var addSalary = this.addSalary;
+                if (addId == "" || addName == "" || addSalary == "") {
+                    alert("员工信息不能为空");
+                } else {
+                    var addEmp = {
+                        id: addId,
+                        name: addName,
+                        salary: addSalary,
+                        createtime: new Date().toLocaleDateString()
+                    }
+//新数据添加到数组中
+                    this.empDataArray.push(addEmp);
+                }
+            },
+//删除函数
+            deleteEmpFun(deleteIndex) {
+                var tf = confirm("确定删除?");
+                if (tf) {
+                    this.empDataArray.splice(deleteIndex, 1);
+                }
+            },
+//更新函数
+            updateEmpFun(updateIndex) {
+                this.updateEmpObj = this.empDataArray[updateIndex];
+            },
+            searchEmpFun(sv) {
+//我们创建数组用来保存查询的结果
+                var newEmpDataArray = [];//如果查询到,则给它添加数据
+                var empDataArray = this.empDataArray;//获取到原数组
+                for (var i = 0; i < empDataArray.length; i++) {
+                    if (empDataArray[i].id.indexOf(sv) != -1 || empDataArray[i].name.indexOf(sv) != -1 || empDataArray[i].salary.indexOf(sv) != -1 || empDataArray[i].createtime.indexOf(sv) != -1) {
+                        newEmpDataArray.push(empDataArray[i]);
+                    }
+                }
+                return newEmpDataArray;
+            }
+        }
+    });
+</script>
+</body>
+</html>

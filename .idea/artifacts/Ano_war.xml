@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Ano:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>Ano</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="anything-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="Ano:war exploded" />
+    </root>
+  </artifact>
+</component>
